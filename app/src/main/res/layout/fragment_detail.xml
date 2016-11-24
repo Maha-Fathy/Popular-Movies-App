@@ -81,6 +81,22 @@
                 android:textColor="#fff"
                 android:textSize="15dp"
                 android:text=""/>
+
+            <com.example.mahafarhy.popular_movies_app.adapter.viewholder.NonScrollListView
+                android:id="@+id/trailerList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp" />
+
+
+            <com.example.mahafarhy.popular_movies_app.adapter.viewholder.NonScrollListView
+                android:id="@+id/reviewList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:dividerHeight="5dp" />
         </LinearLayout>
+
+
     </ScrollView>
 </RelativeLayout>

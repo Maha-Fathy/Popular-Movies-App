@@ -14,9 +14,6 @@ import com.example.mahafarhy.popular_movies_app.model.Movie;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Maha fathy
- */
 public class MovieViewHolder extends RecyclerView.ViewHolder {
 
     Activity activity;

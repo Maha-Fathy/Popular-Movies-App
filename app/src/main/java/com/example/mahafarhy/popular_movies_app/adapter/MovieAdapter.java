@@ -9,9 +9,6 @@ import com.example.mahafarhy.popular_movies_app.adapter.viewholder.MovieViewHold
 import com.example.mahafarhy.popular_movies_app.model.Movie;
 import java.util.ArrayList;
 
-/**
- * Created by Maha Fathy
- */
 public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     ArrayList<Movie> movies;

@@ -1,8 +1,6 @@
 package com.example.mahafarhy.popular_movies_app.service;
 
-/**
- * Created by Maha Fathy
- */
+
 public class Constant {
 
     public static final String BASE_URL_Movie =

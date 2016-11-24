@@ -4,9 +4,6 @@ import com.example.mahafarhy.popular_movies_app.model.Movie;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
-/**
- * Created by Maha Fathy
- */
 public class RespondMovie {
     @SerializedName("results")
     ArrayList<Movie> movies;

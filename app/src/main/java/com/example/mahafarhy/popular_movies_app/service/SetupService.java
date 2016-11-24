@@ -6,9 +6,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Maha Fathy
- */
 public class SetupService extends Application{
     public static Service getServiceMovies;
 

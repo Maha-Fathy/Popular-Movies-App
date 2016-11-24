@@ -1,12 +1,9 @@
 package com.example.mahafarhy.popular_movies_app.model;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 
-/**
- * Created by Maha Fathy
- */
 public class Movie implements Serializable {
     @SerializedName("id")
     private int id;
@@ -26,6 +23,11 @@ public class Movie implements Serializable {
     @SerializedName("overview")
     private String overview;
 
+    boolean favorite;
+    private ArrayList<Trailer> trailers;
+
+    private ArrayList<Review> reviews;
+
     public Movie() {
     }
 
@@ -36,6 +38,7 @@ public class Movie implements Serializable {
         this.vote = vote;
         this.releaseDate = releaseDate;
         this.overview = overview;
+        this.favorite = favorite;
     }
 
     public String getPosterUrl() {
@@ -89,4 +92,51 @@ public class Movie implements Serializable {
         this.overview = overview;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public ArrayList<Trailer> getTrailers() {
+        return trailers;
+    }
+
+    public void setTrailers(ArrayList<Trailer> trailers) {
+        this.trailers = trailers;
+    }
+
+    public ArrayList<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean flag = false;
+        if (o != null && o instanceof Movie){
+            Movie movie = (Movie) o;
+            if(this.posterUrl.equals(movie.getPosterUrl()) && this.getTitle().equals(movie.getTitle())
+                    && this.getVote() != movie.getVote() && this.getOverview().equals(movie.getOverview()))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "overview='" + overview + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", vote=" + vote +
+                ", title='" + title + '\'' +
+                ", posterUrl='" + posterUrl + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

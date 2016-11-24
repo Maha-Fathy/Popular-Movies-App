@@ -1,36 +1,58 @@
 package com.example.mahafarhy.popular_movies_app;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.bumptech.glide.Glide;
+import com.example.mahafarhy.popular_movies_app.adapter.ReviewArrayAdapter;
+import com.example.mahafarhy.popular_movies_app.adapter.TrailerArrayAdapter;
+import com.example.mahafarhy.popular_movies_app.adapter.viewholder.NonScrollListView;
 import com.example.mahafarhy.popular_movies_app.model.Movie;
+import com.example.mahafarhy.popular_movies_app.model.Review;
+import com.example.mahafarhy.popular_movies_app.model.Trailer;
+import com.example.mahafarhy.popular_movies_app.service.SetupService;
+import com.example.mahafarhy.popular_movies_app.service.responde.RespondReview;
+import com.example.mahafarhy.popular_movies_app.service.responde.RespondTrailer;
+
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class DetailFragment extends Fragment {
 
     Movie movie;
+        TrailerArrayAdapter trailerArrayAdapter;
+    ReviewArrayAdapter reviewArrayAdapter;
 
     @Bind(R.id.movieTitle)
-        TextView movieTitleTV;
+    TextView movieTitleTV;
     @Bind(R.id.movieImage)
-        ImageView movieImage;
+    ImageView movieImage;
     @Bind(R.id.rateMovie)
-        TextView rateMovie;
+    TextView rateMovie;
     @Bind(R.id.movieDate)
-        TextView movieDate;
+    TextView movieDate;
     @Bind(R.id.overviewMovie)
-        TextView oveView;
+    TextView oveView;
+    @Bind(R.id.trailerList)
+    NonScrollListView trailerLV;
+    @Bind(R.id.reviewList)
+    NonScrollListView reviewLV;
     @Bind(R.id.favoriteToggleBtn)
-        ToggleButton favoriteTBtn;
+    ToggleButton favoriteTBtn;
 
     public static DetailFragment newInstance(Movie movie){
         DetailFragment detailFragment = new DetailFragment();
@@ -67,6 +89,8 @@ public class DetailFragment extends Fragment {
 
     private void displayMovie(Movie movie) {
         if (movie != null){
+            getTrailer(movie);
+            getReview(movie);
             setLayoutForMD();
             getActivity().setTitle(movie.getTitle());
         }
@@ -89,4 +113,77 @@ public class DetailFragment extends Fragment {
 
     }
 
+    private void getReview(final Movie movie) {
+        SetupService.getServiceMovies.getReviwes(movie.getId()).enqueue(new Callback<RespondReview>() {
+            @Override
+            public void onResponse(Call<RespondReview> call, Response<RespondReview> response) {
+                if(response.body() != null)  {
+                    ArrayList<Review> reviews = response.body().getReviews();
+                    movie.setReviews(reviews);
+                    if(reviews != null && getActivity() != null) {
+                        reviewArrayAdapter = new ReviewArrayAdapter(getActivity(), reviews);
+
+                        View reviewHeader =
+                                getActivity().getLayoutInflater().inflate(R.layout.header, null);
+
+                        TextView trailerTV = (TextView) reviewHeader.findViewById(R.id.head);
+                        if(reviews.size() == 0){
+                            trailerTV.setText("No reviews");
+                            reviewLV.addHeaderView(reviewHeader);
+                        }
+
+                        reviewLV.setAdapter(reviewArrayAdapter);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RespondReview> call, Throwable t) {}
+        });
+    }
+
+    private void getTrailer(final Movie movie) {
+        SetupService.getServiceMovies.getTrailer(movie.getId()).enqueue(new Callback<RespondTrailer>() {
+            @Override
+            public void onResponse(Call<RespondTrailer> call, Response<RespondTrailer> response) {
+                if(response.body() != null) {
+                    ArrayList<Trailer> trailers = response.body().getTrailers();
+                    movie.setTrailers(trailers);
+                    if(trailers != null && getActivity() != null)
+                        setTrailerRV(trailers);
+                }
+            }
+
+            private void setTrailerRV(final ArrayList<Trailer> trailers) {
+                trailerArrayAdapter = new TrailerArrayAdapter(getActivity(), trailers);
+
+                View trailerHeader =
+                        getActivity().getLayoutInflater().inflate(R.layout.header, null);
+
+                TextView trailerTV = (TextView) trailerHeader.findViewById(R.id.head);
+                if(trailers.size() == 0){
+                    trailerTV.setText("No trailers");
+                }
+                else {
+                    trailerTV.setText("Trailers");
+                }
+                trailerLV.addHeaderView(trailerHeader);
+                trailerLV.setAdapter(trailerArrayAdapter);
+                trailerLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                            long arg3) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailers.get(arg2-1).getKey()));
+                        startActivity(browserIntent);
+                    }
+
+                });
+            }
+
+            @Override
+            public void onFailure(Call<RespondTrailer> call, Throwable t) {
+            }
+        });
+    }
 }
