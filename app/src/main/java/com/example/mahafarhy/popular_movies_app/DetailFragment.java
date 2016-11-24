@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.mahafarhy.popular_movies_app.adapter.ReviewArrayAdapter;
 import com.example.mahafarhy.popular_movies_app.adapter.TrailerArrayAdapter;
 import com.example.mahafarhy.popular_movies_app.adapter.viewholder.NonScrollListView;
+import com.example.mahafarhy.popular_movies_app.database.MovieDB;
 import com.example.mahafarhy.popular_movies_app.model.Movie;
 import com.example.mahafarhy.popular_movies_app.model.Review;
 import com.example.mahafarhy.popular_movies_app.model.Trailer;
@@ -111,6 +113,33 @@ public class DetailFragment extends Fragment {
 
         oveView.setText(movie.getOverview());
 
+        setFavoriteTBtn();
+    }
+
+    private void setFavoriteTBtn() {
+        MovieDB movieDB = new MovieDB(getContext());
+        movieDB.open();
+        if(movieDB.getMovie(movie.getId()) != null)
+            movie.setFavorite(true);
+        favoriteTBtn.setVisibility(View.VISIBLE);
+        favoriteTBtn.setChecked(movie.isFavorite());
+
+        favoriteTBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movie.setFavorite(!movie.isFavorite());
+                MovieDB movieDB = new MovieDB(getActivity());
+                movieDB.open();
+                if(movie.isFavorite()) {
+                    if(movieDB.saveMovie(movie))
+                        Log.e("Test", "movieSaved");
+                } else {
+                    if(movieDB.deleteMovie(movie.getId()))
+                        Log.e("Test", "movieDelete");
+                }
+                movieDB.close();
+            }
+        });
     }
 
     private void getReview(final Movie movie) {

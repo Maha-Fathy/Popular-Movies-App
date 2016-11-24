@@ -3,5 +3,6 @@
     <string-array name="type_movie_values">
         <item>popular</item>
         <item>top_rated</item>
+        <item>Fovrite</item>
     </string-array>
 </resources>

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.mahafarhy.popular_movies_app.adapter.MovieAdapter;
+import com.example.mahafarhy.popular_movies_app.database.MovieDB;
 import com.example.mahafarhy.popular_movies_app.model.Movie;
 import com.example.mahafarhy.popular_movies_app.service.SetupService;
 import com.example.mahafarhy.popular_movies_app.service.responde.RespondMovie;
@@ -107,7 +108,18 @@ public class MovieShowFragmet extends Fragment {
     private void getData() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String type = preferences.getString("type", "popular");
-        getMovies(type);
+        if(type.equals("Fovrite")) {
+            getFovriteMovies();
+        } else
+            getMovies(type);
+        setTitle(type);
+    }
+
+    private void getFovriteMovies() {
+        MovieDB movieDB = new MovieDB(getActivity());
+        movieDB.open();
+        notifyARV(movieDB.getMovies());
+        movieDB.close();
     }
 
     private void getMovies(String type) {
@@ -123,5 +135,11 @@ public class MovieShowFragmet extends Fragment {
             @Override
             public void onFailure(Call<RespondMovie> call, Throwable t) {}
         });
+    }
+
+    private void setTitle(String type) {
+        String packageName = getActivity().getPackageName();
+        int id = getResources().getIdentifier(type, "string", packageName);
+        getActivity().setTitle(getString(id));
     }
 }

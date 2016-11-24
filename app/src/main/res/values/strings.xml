@@ -3,6 +3,7 @@
 
     <string name="popular">Popular Movies App</string>
     <string name="top_rated">Top Rate Movies App</string>
+    <string name="Fovrite">Fovrite Movies App</string>
 
     <string name="list_type_key">type</string>
 </resources>
